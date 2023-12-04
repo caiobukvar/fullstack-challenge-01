@@ -20,7 +20,9 @@
 
 ## Installation
 
+```bash
 - npm install
+```
 
 ## Getting Started
 
