@@ -7,3 +7,15 @@ services:
       - ../.env.local
     ports:
       - "5432:5432"
+
+
+
+
+# env_file mostra qual arquivo conterá as configurações, no caso o .env.local 
+
+# contém dados sensíveis, então declarei aqui para mostrar o conteúdo, que são os dados necessários para conexão ao banco.
+# POSTGRES_HOST=localhost
+# POSTGRES_PORT=5432
+# POSTGRES_USER=postgres
+# POSTGRES_DB=postgres
+# POSTGRES_PASSWORD=postgres
