@@ -1,9 +1,22 @@
-// configuração inicial do pg - direto do site https://node-postgres.com/
-
 import { Client } from "pg";
-const client = new Client();
-await client.connect();
 
-const res = await client.query("SELECT $1::text as message", ["Hello world!"]);
-console.log(res.rows[0].message); // Hello world!
-await client.end();
+async function query(queryObject, values) {
+  const client = new Client({
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT,
+    user: process.env.POSTGRES_USER,
+    database: process.env.POSTGRES_DB,
+    password: process.env.POSTGRES_PASSWORD,
+  });
+
+  await client.connect();
+  const result = await client.query(queryObject, values);
+  console.log(result.rows[0].message);
+  await client.end();
+
+  return result;
+}
+
+export default {
+  query: query,
+};

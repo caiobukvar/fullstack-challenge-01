@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { sendContactForm } from "../lib/api";
+import database from "../../infra/database";
 
 const initValues = {
   name: "",
@@ -46,8 +47,6 @@ export default function ContactForm() {
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
   const { values, isLoading, error } = contactData;
-
-  console.log(values);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

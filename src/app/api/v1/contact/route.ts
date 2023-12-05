@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { transporter, mailOptions } from "../../../../config/nodemailer";
+import database from "../../../../../infra/database";
 
 export async function POST(req: NextRequest) {
   type ContactMessageField = {
@@ -37,11 +38,21 @@ export async function POST(req: NextRequest) {
     };
   };
 
+  const addUserQuery = `
+  INSERT INTO users (name, email, phone)
+  VALUES ($1, $2, $3)
+  RETURNING id, name, email, phone, created_at;
+`;
+
+  const { email, name, phone } = data;
+
   try {
     await transporter.sendMail({
       ...mailOptions,
       ...generateEmailContent(data),
     });
+
+    await database.query(addUserQuery, [name, email, phone]);
 
     return NextResponse.json(
       {
