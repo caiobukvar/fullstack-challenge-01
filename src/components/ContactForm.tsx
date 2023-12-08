@@ -13,8 +13,10 @@ import {
   Input,
   Textarea,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { sendContactForm } from "../lib/api";
 
 const initValues = {
   name: "",
@@ -40,6 +42,8 @@ const initState: ContactDataState = {
 export default function ContactForm() {
   const [contactData, setContactData] = useState(initState);
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+  const toast = useToast();
+
   const { values, isLoading, error } = contactData;
 
   const handleChange = (
@@ -60,6 +64,40 @@ export default function ContactForm() {
       ...prev,
       [target.name]: true,
     }));
+
+  const handleSubmit = async () => {
+    setContactData((prev) => ({
+      ...prev,
+      isLoading: true,
+    }));
+
+    try {
+      await sendContactForm(values);
+
+      setTouched({});
+      setContactData(initState);
+      toast({
+        title: "E-mail enviado com sucesso",
+        status: "success",
+        duration: 2000,
+        position: "top",
+      });
+    } catch (error) {
+      const typedError = error as Error;
+
+      setContactData((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: typedError.message,
+      }));
+      toast({
+        title: "Falha ao enviar o e-mail.",
+        status: "error",
+        duration: 2000,
+        position: "top",
+      });
+    }
+  };
 
   return (
     <Card align="center">
@@ -126,6 +164,8 @@ export default function ContactForm() {
           isDisabled={
             !values.name || !values.email || !values.phone || !values.message
           }
+          isLoading={isLoading}
+          onClick={handleSubmit}
         >
           Enviar
         </Button>
