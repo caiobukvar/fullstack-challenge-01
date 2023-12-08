@@ -73,10 +73,10 @@ export default function ContactForm() {
 
     try {
       await sendContactForm(values);
-
       setTouched({});
       setContactData(initState);
-      toast({
+
+      return toast({
         title: "E-mail enviado com sucesso",
         status: "success",
         duration: 2000,
@@ -90,7 +90,7 @@ export default function ContactForm() {
         isLoading: false,
         error: typedError.message,
       }));
-      toast({
+      return toast({
         title: "Falha ao enviar o e-mail.",
         status: "error",
         duration: 2000,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { transporter, mailOptions } from "../../../../config/nodemailer";
+import database from "../../../../../infra/database";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const data: ContactMessageFields = await req.json();
@@ -37,6 +38,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
     };
   };
 
+  const addUserQuery = `
+  INSERT INTO users (name, email, phone)
+  VALUES ($1, $2, $3)
+  RETURNING id, name, email, phone, created_at;
+`;
+
+  const { name, email, phone } = data;
+
   try {
     await transporter.sendMail({
       ...mailOptions,
@@ -44,12 +53,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
       subject: "Nova mensagem para BKVR.DEV",
     });
 
+    await database.query(addUserQuery, [name, email, phone]);
+
     return NextResponse.json(
       {
         success: "Email enviado com sucesso",
       },
       {
-        status: 400,
+        status: 200,
       }
     );
   } catch (error) {
