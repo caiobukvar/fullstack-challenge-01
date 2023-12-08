@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { transporter, mailOptions } from "../../../../config/nodemailer";
 import database from "../../../../../infra/database";
 
-export async function POST(req: NextRequest) {
-  type ContactMessageField = {
+export async function POST(req: NextRequest, res: NextResponse) {
+  const data: ContactMessageFields = await req.json();
+
+  type ContactMessageFields = {
     name: string;
     email: string;
     phone: string;
     message: string;
   };
 
-  type GenerateEmailContent = (data: ContactMessageField) => {
+  type GenerateEmailContent = (data: ContactMessageFields) => {
     text: string;
     html: string;
   };
-
-  const data: ContactMessageField = await req.json();
 
   const generateEmailContent: GenerateEmailContent = (data) => {
     const stringData = Object.entries(data).reduce(
@@ -44,29 +44,35 @@ export async function POST(req: NextRequest) {
   RETURNING id, name, email, phone, created_at;
 `;
 
-  const { email, name, phone } = data;
+  const { name, email, phone } = data;
 
   try {
     await transporter.sendMail({
       ...mailOptions,
       ...generateEmailContent(data),
+      subject: "Nova mensagem para BKVR.DEV",
     });
 
     await database.query(addUserQuery, [name, email, phone]);
 
     return NextResponse.json(
       {
-        success: "E-mail foi enviado com sucesso",
+        success: "Email enviado com sucesso",
       },
-      { status: 200 }
+      {
+        status: 200,
+      }
     );
   } catch (error) {
     const typedError = error as Error;
+
     return NextResponse.json(
       {
-        error: typedError.message,
+        success: typedError.message,
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 }
