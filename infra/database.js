@@ -11,7 +11,6 @@ async function query(queryObject, values) {
 
   await client.connect();
   const result = await client.query(queryObject, values);
-  console.log(result.rows[0].message);
   await client.end();
 
   return result;

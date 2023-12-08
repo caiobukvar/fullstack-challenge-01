@@ -14,7 +14,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   try {
     await database.query(createUserTable);
-
     console.log("Tabela criada com sucesso");
 
     return NextResponse.json(
@@ -24,7 +23,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
       }
     );
   } catch (error) {
-    console.log("Tabela criada com sucesso");
+    console.log("Erro ao criar tabela");
 
     return NextResponse.json(
       { response: "Erro ao criar tabela" },
