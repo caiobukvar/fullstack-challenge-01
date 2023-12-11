@@ -14,7 +14,7 @@
 
 - PostgreSQL
 
-### Styling
+### Styling and form handling
 
 - ChakraUI
 
