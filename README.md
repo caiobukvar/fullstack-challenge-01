@@ -1,8 +1,8 @@
 # Fullstack Challenge 01 - Contact Form Component
 
-## A small contact form component made with:
-
 ![Component preview](https://i.imgur.com/0YM45pr.png)
+
+## A small contact form component made with:
 
 - NextJS
 - React
