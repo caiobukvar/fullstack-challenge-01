@@ -2,6 +2,8 @@
 
 ## A small contact form component made with:
 
+![Component preview](https://imgur.com/0YM45pr)
+
 - NextJS
 - React
 - Typescript
