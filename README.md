@@ -2,7 +2,7 @@
 
 ## A small contact form component made with:
 
-![Component preview](https://imgur.com/0YM45pr)
+![Component preview](https://i.imgur.com/0YM45pr.png)
 
 - NextJS
 - React
